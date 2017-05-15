@@ -18,7 +18,9 @@ let cellSize;
 let xOffset;
 let yOffset;
 
-$(document).ready(() => {
+document.addEventListener('DOMContentLoaded', init, { once: true, passive: true });
+
+function init() {
   canvas = document.getElementById('fancyboard');
   canvas_back = document.createElement('canvas');
   calculateSizes();
@@ -32,10 +34,11 @@ $(document).ready(() => {
   setInterval(() => setRandomCells(10), 100);
   setRandomCells(10);
 
-  $(window).on('resize', calculateSizes);
+  window.addEventListener('resize', calculateSizes, { passive: true });
+
   setTimeout(draw, 10);
   window.requestAnimationFrame(render);
-});
+};
 
 function calculateSizes() {
   canvas.width = window.innerWidth;
