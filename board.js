@@ -43,12 +43,14 @@ function init() {
 function calculateSizes() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  canvas_back.width = window.innerWidth;
-  canvas_back.height = window.innerHeight;
 
   cellSize = Math.min(Math.floor(canvas.height / height), Math.floor(canvas.width / width));
-  xOffset = Math.floor((canvas.width - (cellSize * width)) / 2);
-  yOffset = Math.floor((canvas.height - (cellSize * height)) / 2);
+
+  canvas_back.width = cellSize * width;
+  canvas_back.height = cellSize * height;
+
+  xOffset = Math.floor((canvas.width - canvas_back.width) / 2);
+  yOffset = Math.floor((canvas.height - canvas_back.height) / 2);
 }
 
 function setRandomCells(howMany = 1) {
@@ -89,8 +91,8 @@ function draw() {
   cells
     .filter(({ fadeStep }) => fadeStep > fadeStop)
     .forEach((cell) => {
-      const xDraw = xOffset + (cell.x * cellSize);
-      const yDraw = yOffset + (cell.y * cellSize);
+      const xDraw = cell.x * cellSize;
+      const yDraw = cell.y * cellSize;
 
       ctx_back.fillStyle = `rgba(${cell.r}, ${cell.g}, ${cell.b}, ${cell.fadeStep / fadeStart})`;
       ctx_back.clearRect(xDraw, yDraw, cellSize, cellSize);
@@ -101,7 +103,7 @@ function draw() {
 }
 
 function render() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(canvas_back, 0, 0);
+  ctx.clearRect(xOffset, yOffset, canvas_back.width, canvas_back.height);
+  ctx.drawImage(canvas_back, xOffset, yOffset);
   window.requestAnimationFrame(render);
 }
